@@ -19,10 +19,24 @@ const { Text } = Typography;
 
 interface SidebarProps {
   className?: string;
+  onCollapse?: (collapsed: boolean) => void;
+  collapsed?: boolean;
 }
 
-export default function Sidebar({ className }: SidebarProps) {
-  const [collapsed, setCollapsed] = useState(false);
+export default function Sidebar({ 
+  className, 
+  onCollapse, 
+  collapsed: controlledCollapsed 
+}: SidebarProps) {
+  const [internalCollapsed, setInternalCollapsed] = useState(false);
+  const collapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
+  
+  const handleCollapse = (newCollapsed: boolean) => {
+    if (controlledCollapsed === undefined) {
+      setInternalCollapsed(newCollapsed);
+    }
+    onCollapse?.(newCollapsed);
+  };
 
   const menuItems = [
     {
@@ -74,16 +88,17 @@ export default function Sidebar({ className }: SidebarProps) {
   };
 
   const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    handleCollapse(!collapsed);
   };
 
   return (
     <Sider
       collapsible
       collapsed={collapsed}
-      onCollapse={setCollapsed}
+      onCollapse={handleCollapse}
       width={256}
       className={`${className} bg-white border-r border-gray-200`}
+      style={{ backgroundColor: '#ffffff', borderRight: '1px solid #f0f0f0' }}
       trigger={null}
       breakpoint="lg"
       collapsedWidth={80}
