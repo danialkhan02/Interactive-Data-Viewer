@@ -131,7 +131,7 @@ export default function Dashboard() {
               <Col xs={24} lg={12} key={section.key}>
                 <Card 
                   className={`h-full ${section.color} border-2 hover:shadow-md transition-shadow`}
-                  bodyStyle={{ padding: '20px' }}
+                  styles={{ body: { padding: '20px' } }}
                 >
                   <div className="flex items-start justify-between h-full">
                     <div className="flex-1">
