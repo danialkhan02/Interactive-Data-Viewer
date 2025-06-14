@@ -13,6 +13,7 @@ import {
 import { Card, Typography } from 'antd';
 import { ChartDataPoint } from '../../types';
 import { loadDataset } from '../../services/dataParser';
+import { useAppSelector } from '../../store/hooks';
 
 const { Title, Text } = Typography;
 
@@ -20,20 +21,39 @@ const { Title, Text } = Typography;
 ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
 
 interface ScatterPlotProps {
-  xProperty?: string;
-  yProperty?: string;
   height?: number;
   className?: string;
   title?: string;
 }
 
 export default function ScatterPlot({
-  xProperty = 'Oven Temperature',
-  yProperty = 'Viscosity',
   height = 400,
   className,
   title,
 }: ScatterPlotProps) {
+  // Get selected properties from Redux store
+  const { selectedInputs, selectedOutputs } = useAppSelector(state => state.dataset);
+  
+  // Determine which properties to use for X and Y axes
+  const xProperty = selectedInputs[0];
+  const yProperty = selectedOutputs[0];
+
+  // Show message if no properties are selected
+  if (!xProperty || !yProperty) {
+    return (
+      <Card className={className}>
+        <div className="text-center py-8">
+          <Title level={4} type="secondary">
+            Select Properties to View Scatterplot
+          </Title>
+          <Text type="secondary">
+            Please select at least one input property (X-axis) and one output property (Y-axis) to display the scatterplot.
+          </Text>
+        </div>
+      </Card>
+    );
+  }
+
   // Generate sample data from the dataset
   const generateScatterData = (): ChartDataPoint[] => {
     const dataset = loadDataset();
@@ -135,11 +155,9 @@ export default function ScatterPlot({
 
   return (
     <Card className={className}>
-      {title && (
-        <Title level={4} className="mb-4">
-          {title}
-        </Title>
-      )}
+      <Title level={4} className="mb-4">
+        {title || `${xProperty} vs ${yProperty}`}
+      </Title>
       
       <div className="mb-4">
         <Text type="secondary">
