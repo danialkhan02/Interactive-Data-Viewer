@@ -12,6 +12,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "antd": "^5.26.0",
     "chart.js": "^4.4.9",
+    "chartjs-plugin-zoom": "^2.2.0",
     "dayjs": "^1.11.13",
     "next": "15.3.3",
     "react": "^19.0.0",
