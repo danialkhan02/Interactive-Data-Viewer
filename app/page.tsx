@@ -1,12 +1,7 @@
 'use client';
 
-import MainLayout from '../src/components/layout/MainLayout';
-import Dashboard from '../src/components/Dashboard';
+import AppRouter from '../src/components/AppRouter';
 
 export default function Home() {
-  return (
-    <MainLayout>
-      <Dashboard />
-    </MainLayout>
-  );
+  return <AppRouter />;
 }

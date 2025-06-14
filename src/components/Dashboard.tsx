@@ -13,14 +13,27 @@ import {
 } from '@ant-design/icons';
 import { useAppSelector } from '../store/hooks';
 import { getDatasetSummary } from '../services/dataParser';
+import { useNavigate } from 'react-router-dom';
 
 const { Title, Paragraph, Text } = Typography;
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { selectedInputs, selectedOutputs } = useAppSelector(state => state.dataset);
   
   // Load dataset summary for overview stats
   const summary = getDatasetSummary();
+
+  // Handle navigation to visualization pages
+  const handleVisualizationClick = (key: string) => {
+    switch (key) {
+      case 'scatterplot':
+        navigate('/scatterplot');
+        break;
+      default:
+        console.log('Navigation not implemented for:', key);
+    }
+  };
 
   const overviewStats = [
     {
@@ -131,7 +144,7 @@ export default function Dashboard() {
               <Col xs={24} lg={12} key={section.key}>
                 <Card 
                   className={`h-full ${section.color} border-2 hover:shadow-md transition-shadow`}
-                  bodyStyle={{ padding: '20px' }}
+                  styles={{ body: { padding: '20px' } }}
                 >
                   <div className="flex items-start justify-between h-full">
                     <div className="flex-1">
@@ -148,6 +161,7 @@ export default function Dashboard() {
                         type={section.buttonColor === 'primary' ? 'primary' : 'default'}
                         size="large"
                         className="w-full"
+                        onClick={() => handleVisualizationClick(section.key)}
                       >
                         Open {section.title}
                       </Button>

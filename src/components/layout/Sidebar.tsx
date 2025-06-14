@@ -13,6 +13,7 @@ import {
   HomeOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
 const { Text } = Typography;
@@ -30,6 +31,8 @@ export default function Sidebar({
 }: SidebarProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const collapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
+  const navigate = useNavigate();
+  const location = useLocation();
   
   const handleCollapse = (newCollapsed: boolean) => {
     if (controlledCollapsed === undefined) {
@@ -83,8 +86,28 @@ export default function Sidebar({
   ];
 
   const handleMenuClick = (e: { key: string }) => {
-    console.log('Sidebar navigate to:', e.key);
-    // TODO: Add navigation logic when routing is implemented
+    switch (e.key) {
+      case 'dashboard':
+        navigate('/');
+        break;
+      case 'scatterplot':
+        navigate('/scatterplot');
+        break;
+      default:
+        console.log('Navigation not implemented for:', e.key);
+    }
+  };
+
+  // Get current selected menu key based on location
+  const getCurrentMenuKey = () => {
+    switch (location.pathname) {
+      case '/':
+        return ['dashboard'];
+      case '/scatterplot':
+        return ['scatterplot'];
+      default:
+        return ['dashboard'];
+    }
   };
 
   const toggleCollapsed = () => {
@@ -131,7 +154,7 @@ export default function Sidebar({
         <div className="flex-1 overflow-y-auto pt-2">
           <Menu
             mode="inline"
-            defaultSelectedKeys={['dashboard']}
+            selectedKeys={getCurrentMenuKey()}
             items={menuItems}
             onClick={handleMenuClick}
             className="border-none h-full"
