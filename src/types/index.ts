@@ -1,4 +1,4 @@
-// Core experiment data interfaces as specified in architecture.md
+// Core experiment data interfaces
 export interface ExperimentData {
   inputs: Record<string, number>;
   outputs: Record<string, number>;
