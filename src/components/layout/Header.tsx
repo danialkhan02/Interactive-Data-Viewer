@@ -66,7 +66,8 @@ export default function Header({ className }: HeaderProps) {
       className={`${className} bg-white shadow-sm border-b border-gray-200`}
       style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #f0f0f0' }}
     >
-      <div className="flex items-center justify-between h-full max-w-7xl mx-auto px-4">
+      <div className="flex items-center justify-between h-full w-full px-6"
+           style={{ paddingLeft: '280px' }}>
         {/* Logo and Title */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center">

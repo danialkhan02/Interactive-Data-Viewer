@@ -97,15 +97,15 @@ export default function Sidebar({
       collapsed={collapsed}
       onCollapse={handleCollapse}
       width={256}
-      className={`${className} bg-white border-r border-gray-200`}
-      style={{ backgroundColor: '#ffffff', borderRight: '1px solid #f0f0f0' }}
+      className={`${className} bg-white`}
+      style={{ backgroundColor: '#ffffff', border: 'none' }}
       trigger={null}
       breakpoint="lg"
       collapsedWidth={80}
     >
-      <div className="h-full flex flex-col">
+      <div className="h-full flex flex-col pt-16">
         {/* Sidebar Header */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="px-4 py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             {!collapsed && (
               <div className="flex items-center">
@@ -128,7 +128,7 @@ export default function Sidebar({
         </div>
 
         {/* Navigation Menu */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto pt-2">
           <Menu
             mode="inline"
             defaultSelectedKeys={['dashboard']}
@@ -136,7 +136,7 @@ export default function Sidebar({
             onClick={handleMenuClick}
             className="border-none h-full"
             inlineCollapsed={collapsed}
-            style={{ borderRight: 0 }}
+            style={{ borderRight: 0, paddingTop: 0 }}
           />
         </div>
 

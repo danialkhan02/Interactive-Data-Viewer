@@ -31,7 +31,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
   }, []);
 
   // Calculate content margin based on sidebar state
-  const contentMarginLeft = sidebarCollapsed ? '80px' : '256px';
+  const contentMarginLeft = '0px';
 
   return (
     <Layout className="min-h-screen bg-gray-50">
@@ -42,7 +42,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <Layout className="pt-16"> {/* Add padding-top to account for fixed header */}
         {/* Sidebar */}
         <Sidebar 
-          className="fixed left-0 top-16 bottom-0 z-40"
+          className="fixed left-0 top-0 bottom-0 z-40"
           onCollapse={setSidebarCollapsed}
           collapsed={sidebarCollapsed}
         />
@@ -52,13 +52,11 @@ export default function MainLayout({ children }: MainLayoutProps) {
           className="min-h-screen bg-white transition-all duration-300"
           style={{
             marginLeft: isMobile ? '0' : contentMarginLeft,
-            padding: isMobile ? '16px' : '24px',
+            padding: isMobile ? '16px' : '16px 16px 16px 8px',
             minHeight: 'calc(100vh - 64px)', // Full height minus header
           }}
         >
-          <div className="max-w-full mx-auto">
-            {children}
-          </div>
+          {children}
         </Content>
       </Layout>
     </Layout>
