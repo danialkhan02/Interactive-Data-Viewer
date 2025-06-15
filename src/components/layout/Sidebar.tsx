@@ -93,6 +93,9 @@ export default function Sidebar({
       case 'scatterplot':
         navigate('/scatterplot');
         break;
+      case 'histogram':
+        navigate('/histogram');
+        break;
       default:
         console.log('Navigation not implemented for:', e.key);
     }
@@ -105,6 +108,8 @@ export default function Sidebar({
         return ['dashboard'];
       case '/scatterplot':
         return ['scatterplot'];
+      case '/histogram':
+        return ['histogram'];
       default:
         return ['dashboard'];
     }

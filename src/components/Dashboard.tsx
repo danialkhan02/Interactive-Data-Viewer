@@ -30,6 +30,9 @@ export default function Dashboard() {
       case 'scatterplot':
         navigate('/scatterplot');
         break;
+      case 'histogram':
+        navigate('/histogram');
+        break;
       default:
         console.log('Navigation not implemented for:', key);
     }
@@ -73,7 +76,7 @@ export default function Dashboard() {
       description: 'Visualize data distributions and frequency patterns',
       icon: <BarChartOutlined className="text-2xl text-green-500" />,
       color: 'border-green-200 bg-green-50',
-      buttonColor: 'default',
+      buttonColor: 'primary',
     },
     {
       key: 'correlation',
