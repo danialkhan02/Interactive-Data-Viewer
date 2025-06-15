@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
 import Dashboard from './Dashboard';
 import ScatterplotPage from '../pages/ScatterplotPage';
+import HistogramPage from '../pages/HistogramPage';
 
 export default function AppRouter() {
   return (
@@ -12,6 +13,7 @@ export default function AppRouter() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/scatterplot" element={<ScatterplotPage />} />
+          <Route path="/histogram" element={<HistogramPage />} />
         </Routes>
       </MainLayout>
     </Router>
