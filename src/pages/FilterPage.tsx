@@ -77,20 +77,12 @@ export default function FilterPage() {
         title={
           <div className="flex justify-between items-center">
             <span>Filter Controls</span>
-            <Badge count={activeFilterCount} showZero={false} />
           </div>
         }
         placement="left"
-        width={400}
+        width={600}
         onClose={() => setFilterDrawerOpen(false)}
         open={filterDrawerOpen}
-        extra={
-          <Button
-            type="text"
-            icon={<CloseOutlined />}
-            onClick={() => setFilterDrawerOpen(false)}
-          />
-        }
         styles={{
           body: { padding: '16px' }
         }}
