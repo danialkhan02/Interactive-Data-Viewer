@@ -46,58 +46,21 @@ export default function Header({ className }: HeaderProps) {
   return (
     <AntHeader 
       className={`${className} bg-white shadow-sm border-b border-gray-200`}
-      style={{ backgroundColor: '#ffffff', borderBottom: '1px solid #f0f0f0' }}
+      style={{ backgroundColor: '#FAFAFA', borderBottom: '1px solid #f0f0f0' }}
     >
-      <div className="flex items-center justify-between h-full w-full px-6"
-           style={{ paddingLeft: '280px' }}>
-        {/* Logo and Title */}
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-              <BarChartOutlined className="text-white text-lg" />
-            </div>
-            <Title level={3} className="m-0 text-gray-800 hidden sm:block">
-              Interactive Data Viewer
-            </Title>
-            <Title level={4} className="m-0 text-gray-800 block sm:hidden">
-              Data Viewer
-            </Title>
-          </div>
+      <div className="flex items-center h-full w-full px-6 relative">
+        {/* Logo - Left side */}
+        <div className="flex items-center">
+          <img src="/assets/logo.png" alt="Uncountable Logo" className="w-50 h-10" />
         </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden lg:block">
-          <Menu
-            mode="horizontal"
-            items={menuItems}
-            onClick={handleMenuClick}
-            className="border-none bg-transparent"
-            style={{ lineHeight: '64px' }}
-          />
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="lg:hidden">
-          <Button
-            type="text"
-            icon={<MenuOutlined />}
-            onClick={() => setMobileMenuVisible(!mobileMenuVisible)}
-            className="text-gray-600"
-          />
+        
+        {/* Title - Centered */}
+        <div className="absolute left-1/2 transform -translate-x-1/2">
+          <Title level={3} className="m-0 text-gray-800 hidden sm:block">
+            Interactive Data Viewer
+          </Title>
         </div>
       </div>
-
-      {/* Mobile Navigation Menu */}
-      {mobileMenuVisible && (
-        <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
-          <Menu
-            mode="vertical"
-            items={menuItems}
-            onClick={handleMenuClick}
-            className="border-none"
-          />
-        </div>
-      )}
     </AntHeader>
   );
 } 
