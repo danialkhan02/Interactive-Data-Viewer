@@ -4,10 +4,7 @@ import { Layout, Menu, Button, Typography } from 'antd';
 import { 
   BarChartOutlined, 
   DotChartOutlined, 
-  FilterOutlined, 
-  HeatMapOutlined, 
-  SearchOutlined, 
-  LineChartOutlined,
+  FilterOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   HomeOutlined
@@ -61,27 +58,9 @@ export default function Sidebar({
       label: 'Histogram',
     },
     {
-      key: 'correlation',
-      icon: <HeatMapOutlined />,
-      label: 'Correlation Matrix',
-    },
-    {
-      key: 'trends',
-      icon: <LineChartOutlined />,
-      label: 'Time Trends',
-    },
-    {
-      type: 'divider' as const,
-    },
-    {
       key: 'filters',
       icon: <FilterOutlined />,
       label: 'Data Filters',
-    },
-    {
-      key: 'similarity',
-      icon: <SearchOutlined />,
-      label: 'Similarity Search',
     },
   ];
 
@@ -95,6 +74,9 @@ export default function Sidebar({
         break;
       case 'histogram':
         navigate('/histogram');
+        break;
+      case 'filters':
+        navigate('/filters');
         break;
       default:
         console.log('Navigation not implemented for:', e.key);
@@ -110,6 +92,8 @@ export default function Sidebar({
         return ['scatterplot'];
       case '/histogram':
         return ['histogram'];
+      case '/filters':
+        return ['filters'];
       default:
         return ['dashboard'];
     }
