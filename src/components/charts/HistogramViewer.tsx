@@ -40,7 +40,6 @@ export default function HistogramViewer({
   bins = 20,
   height = 400,
   className,
-  title,
 }: HistogramViewerProps) {
   const [selectedOutput, setSelectedOutput] = useState<string>('');
   const [outputRange, setOutputRange] = useState<[number, number] | null>(null);

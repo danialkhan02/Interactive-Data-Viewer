@@ -4,10 +4,7 @@ import { Layout, Typography, Menu, Button } from 'antd';
 import { 
   BarChartOutlined, 
   DotChartOutlined, 
-  FilterOutlined, 
-  HeatMapOutlined, 
-  SearchOutlined, 
-  LineChartOutlined,
+  FilterOutlined,
   MenuOutlined 
 } from '@ant-design/icons';
 import { useState } from 'react';
@@ -37,21 +34,6 @@ export default function Header({ className }: HeaderProps) {
       key: 'filters',
       icon: <FilterOutlined />,
       label: 'Data Filters',
-    },
-    {
-      key: 'correlation',
-      icon: <HeatMapOutlined />,
-      label: 'Correlation Matrix',
-    },
-    {
-      key: 'similarity',
-      icon: <SearchOutlined />,
-      label: 'Similarity Search',
-    },
-    {
-      key: 'trends',
-      icon: <LineChartOutlined />,
-      label: 'Time Trends',
     },
   ];
 

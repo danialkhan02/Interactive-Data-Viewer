@@ -4,8 +4,6 @@ import { Card, Row, Col, Statistic, Typography, Button, Space, Divider } from 'a
 import { 
   BarChartOutlined, 
   DotChartOutlined, 
-  HeatMapOutlined, 
-  LineChartOutlined,
   FilterOutlined,
   SearchOutlined,
   DatabaseOutlined,
@@ -32,6 +30,9 @@ export default function Dashboard() {
         break;
       case 'histogram':
         navigate('/histogram');
+        break;
+      case 'filters':
+        navigate('/filters');
         break;
       default:
         console.log('Navigation not implemented for:', key);
@@ -79,20 +80,12 @@ export default function Dashboard() {
       buttonColor: 'primary',
     },
     {
-      key: 'correlation',
-      title: 'Correlation Matrix',
-      description: 'Discover correlations between multiple variables',
-      icon: <HeatMapOutlined className="text-2xl text-red-500" />,
-      color: 'border-red-200 bg-red-50',
-      buttonColor: 'default',
-    },
-    {
-      key: 'trends',
-      title: 'Time Trends',
-      description: 'Analyze temporal patterns and trends over time',
-      icon: <LineChartOutlined className="text-2xl text-orange-500" />,
-      color: 'border-orange-200 bg-orange-50',
-      buttonColor: 'default',
+      key: 'filters',
+      title: 'Data Filtering',
+      description: 'Filter experiments by input properties and explore detailed results',
+      icon: <FilterOutlined className="text-2xl text-purple-500" />,
+      color: 'border-purple-200 bg-purple-50',
+      buttonColor: 'primary',
     },
   ];
 
@@ -181,7 +174,10 @@ export default function Dashboard() {
           <Row gutter={[16, 16]}>
             {quickActions.map((action) => (
               <Col xs={24} sm={12} key={action.key}>
-                <Card className="bg-gray-50 border-0 hover:bg-gray-100 transition-colors cursor-pointer">
+                <Card 
+                  className="bg-gray-50 border-0 hover:bg-gray-100 transition-colors cursor-pointer"
+                  onClick={() => handleVisualizationClick(action.key)}
+                >
                   <div className="flex items-center">
                     <div className="text-2xl text-gray-500 mr-4">
                       {action.icon}
