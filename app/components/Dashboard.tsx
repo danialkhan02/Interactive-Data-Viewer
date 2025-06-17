@@ -5,7 +5,6 @@ import {
   BarChartOutlined, 
   DotChartOutlined, 
   FilterOutlined,
-  SearchOutlined,
   DatabaseOutlined,
   ExperimentOutlined
 } from '@ant-design/icons';

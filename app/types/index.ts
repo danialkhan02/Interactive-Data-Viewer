@@ -51,6 +51,11 @@ export interface DatasetState {
   selectedOutputs: string[];
   selectedExperimentId: string;
   filterRange: Record<string, [number, number]>;
+  // Histogram-specific state
+  histogram: {
+    selectedOutput: string;
+    outputRange: [number, number] | null;
+  };
 }
 
 // Utility types for working with properties

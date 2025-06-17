@@ -7,6 +7,11 @@ const initialState: DatasetState = {
   selectedOutputs: [],
   selectedExperimentId: '',
   filterRange: {},
+  // Histogram-specific state
+  histogram: {
+    selectedOutput: '',
+    outputRange: null,
+  },
 };
 
 // Create the dataset slice
@@ -35,6 +40,22 @@ const datasetSlice = createSlice({
       state.selectedOutputs = action.payload;
     },
 
+    // Histogram-specific actions
+    setHistogramOutput: (state, action: PayloadAction<string>) => {
+      state.histogram.selectedOutput = action.payload;
+      // Reset range when output changes
+      state.histogram.outputRange = null;
+    },
+    setHistogramRange: (state, action: PayloadAction<[number, number] | null>) => {
+      state.histogram.outputRange = action.payload;
+    },
+    resetHistogramState: (state) => {
+      state.histogram = {
+        selectedOutput: '',
+        outputRange: null,
+      };
+    },
+
     // Action to reset entire state
     resetDatasetState: () => {
       return initialState;
@@ -49,6 +70,9 @@ export const {
   removeSelectedInput,
   clearSelectedInputs,
   setSelectedOutputs,
+  setHistogramOutput,
+  setHistogramRange,
+  resetHistogramState,
   resetDatasetState,
 } = datasetSlice.actions;
 
