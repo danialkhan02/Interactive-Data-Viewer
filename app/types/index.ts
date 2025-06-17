@@ -49,10 +49,8 @@ export type TypedDataset = Record<string, TypedExperimentData>;
 export interface DatasetState {
   selectedInputs: string[];
   selectedOutputs: string[];
-  correlationType: 'pearson' | 'spearman';
   selectedExperimentId: string;
   filterRange: Record<string, [number, number]>;
-  similarityCount: number;
 }
 
 // Utility types for working with properties
@@ -67,12 +65,6 @@ export interface ChartDataPoint {
   experimentId: string;
 }
 
-export interface CorrelationMatrix {
-  [inputProperty: string]: {
-    [outputProperty: string]: number;
-  };
-}
-
 // Filter types
 export interface PropertyFilter {
   property: string;
@@ -84,18 +76,4 @@ export interface FilteredResult {
   experimentId: string;
   data: ExperimentData;
   matchScore?: number;
-}
-
-// Similarity search types
-export interface SimilarityResult {
-  experimentId: string;
-  similarity: number;
-  data: ExperimentData;
-}
-
-// Time series types (for experiments with date parsing)
-export interface TimeSeriesDataPoint {
-  date: Date;
-  value: number;
-  experimentId: string;
 }

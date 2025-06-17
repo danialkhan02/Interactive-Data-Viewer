@@ -88,12 +88,6 @@ export default function Dashboard({ onViewChange }: DashboardProps) {
       icon: <FilterOutlined />,
       description: 'Filter and subset your data',
     },
-    {
-      key: 'similarity',
-      title: 'Similarity Search',
-      icon: <SearchOutlined />,
-      description: 'Find similar experiments',
-    },
   ];
 
   return (
