@@ -7,7 +7,6 @@ import { getInputProperties, getPropertyRange } from '../../services/dataParser'
 import RangeSlider from './RangeSlider';
 
 const { Title, Text } = Typography;
-const { Panel } = Collapse;
 
 export interface PropertyFilter {
   property: string;
@@ -216,57 +215,59 @@ export default function FilterPanel({
         <Collapse 
           defaultActiveKey={defaultCollapsed ? [] : ['filters']}
           ghost
-        >
-          <Panel 
-            header={
-              <Text strong>
-                Input Property Filters ({activeFilterCount} active)
-              </Text>
-            } 
-            key="filters"
-          >
-            <Space direction="vertical" className="w-full" size="middle">
-              {filterEntries.length === 0 ? (
-                <Text type="secondary">No input properties available for filtering</Text>
-              ) : (
-                filterEntries.map(([property, filter]) => (
-                  <Card key={property} size="small" className={filter.enabled ? 'border-blue-300' : ''}>
-                    <Space direction="vertical" className="w-full" size="small">
-                      {/* Property Header */}
-                      <div className="flex justify-between items-center">
-                        <Checkbox
-                          checked={filter.enabled}
-                          onChange={(e) => handleFilterToggle(property, e.target.checked)}
-                        >
-                          <Text strong className={filter.enabled ? 'text-blue-600' : ''}>
-                            {property}
-                          </Text>
-                        </Checkbox>
-                        
-                        {filter.enabled && (
-                          <Text type="secondary" className="text-xs">
-                            [{filter.range[0].toFixed(2)}, {filter.range[1].toFixed(2)}]
-                          </Text>
-                        )}
-                      </div>
+          items={[
+            {
+              key: 'filters',
+              label: (
+                <Text strong>
+                  Input Property Filters ({activeFilterCount} active)
+                </Text>
+              ),
+              children: (
+                <Space direction="vertical" className="w-full" size="middle">
+                  {filterEntries.length === 0 ? (
+                    <Text type="secondary">No input properties available for filtering</Text>
+                  ) : (
+                    filterEntries.map(([property, filter]) => (
+                      <Card key={property} size="small" className={filter.enabled ? 'border-blue-300' : ''}>
+                        <Space direction="vertical" className="w-full" size="small">
+                          {/* Property Header */}
+                          <div className="flex justify-between items-center">
+                            <Checkbox
+                              checked={filter.enabled}
+                              onChange={(e) => handleFilterToggle(property, e.target.checked)}
+                            >
+                              <Text strong className={filter.enabled ? 'text-blue-600' : ''}>
+                                {property}
+                              </Text>
+                            </Checkbox>
+                            
+                            {filter.enabled && (
+                              <Text type="secondary" className="text-xs">
+                                [{filter.range[0].toFixed(2)}, {filter.range[1].toFixed(2)}]
+                              </Text>
+                            )}
+                          </div>
 
-                      {/* Range Slider */}
-                      <div className={filter.enabled ? '' : 'opacity-50'}>
-                        <RangeSlider
-                          property={property}
-                          value={filter.range}
-                          onChange={(range) => handleRangeChange(property, range)}
-                          disabled={!filter.enabled}
-                          showInputs={filter.enabled}
-                        />
-                      </div>
-                    </Space>
-                  </Card>
-                ))
-              )}
-            </Space>
-          </Panel>
-        </Collapse>
+                          {/* Range Slider */}
+                          <div className={filter.enabled ? '' : 'opacity-50'}>
+                            <RangeSlider
+                              property={property}
+                              value={filter.range}
+                              onChange={(range) => handleRangeChange(property, range)}
+                              disabled={!filter.enabled}
+                              showInputs={filter.enabled}
+                            />
+                          </div>
+                        </Space>
+                      </Card>
+                    ))
+                  )}
+                </Space>
+              )
+            }
+          ]}
+        />
 
         {/* Footer Info */}
         {activeFilterCount > 0 && (

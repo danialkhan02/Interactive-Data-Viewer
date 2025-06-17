@@ -2,7 +2,12 @@
 
 import { Card, Row, Col, Space, Typography } from 'antd';
 import PropertySelector from '../components/ui/PropertySelector';
-import ScatterPlot from '../components/charts/ScatterPlot';
+import dynamic from 'next/dynamic';
+
+const ScatterPlot = dynamic(() => import('../components/charts/ScatterPlot'), {
+  ssr: false,
+  loading: () => <div className="flex justify-center items-center h-96">Loading chart...</div>
+});
 
 const { Title, Paragraph } = Typography;
 

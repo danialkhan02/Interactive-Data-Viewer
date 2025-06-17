@@ -5,38 +5,26 @@ import {
   BarChartOutlined, 
   DotChartOutlined, 
   FilterOutlined,
-  SearchOutlined,
   DatabaseOutlined,
   ExperimentOutlined
 } from '@ant-design/icons';
-import { useAppSelector } from '../store/hooks';
 import { getDatasetSummary } from '../services/dataParser';
-import { useNavigate } from 'react-router-dom';
-
 const { Title, Paragraph, Text } = Typography;
 
-export default function Dashboard() {
-  const navigate = useNavigate();
-  const { selectedInputs, selectedOutputs } = useAppSelector(state => state.dataset);
-  
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
+
+interface DashboardProps {
+  onViewChange?: (view: ViewType) => void;
+}
+
+export default function Dashboard({ onViewChange }: DashboardProps) {  
   // Load dataset summary for overview stats
   const summary = getDatasetSummary();
 
   // Handle navigation to visualization pages
   const handleVisualizationClick = (key: string) => {
-    switch (key) {
-      case 'scatterplot':
-        navigate('/scatterplot');
-        break;
-      case 'histogram':
-        navigate('/histogram');
-        break;
-      case 'filters':
-        navigate('/filters');
-        break;
-      default:
-        console.log('Navigation not implemented for:', key);
-    }
+    const view = key as ViewType;
+    onViewChange?.(view);
   };
 
   const overviewStats = [
@@ -55,11 +43,6 @@ export default function Dashboard() {
       value: summary.outputProperties,
       icon: <DatabaseOutlined className="text-orange-600" />,
     },
-    {
-      title: 'Selected Variables',
-      value: selectedInputs.length + selectedOutputs.length,
-      icon: <FilterOutlined className="text-purple-600" />,
-    },
   ];
 
   const visualizationSections = [
@@ -68,7 +51,7 @@ export default function Dashboard() {
       title: 'Scatterplot Analysis',
       description: 'Explore relationships between variables with interactive scatter plots',
       icon: <DotChartOutlined className="text-2xl text-blue-500" />,
-      color: 'border-blue-200 bg-blue-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
     },
     {
@@ -76,7 +59,7 @@ export default function Dashboard() {
       title: 'Distribution Analysis',
       description: 'Visualize data distributions and frequency patterns',
       icon: <BarChartOutlined className="text-2xl text-green-500" />,
-      color: 'border-green-200 bg-green-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
     },
     {
@@ -84,23 +67,8 @@ export default function Dashboard() {
       title: 'Data Filtering',
       description: 'Filter experiments by input properties and explore detailed results',
       icon: <FilterOutlined className="text-2xl text-purple-500" />,
-      color: 'border-purple-200 bg-purple-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
-    },
-  ];
-
-  const quickActions = [
-    {
-      key: 'filters',
-      title: 'Data Filters',
-      icon: <FilterOutlined />,
-      description: 'Filter and subset your data',
-    },
-    {
-      key: 'similarity',
-      title: 'Similarity Search',
-      icon: <SearchOutlined />,
-      description: 'Find similar experiments',
     },
   ];
 
@@ -125,7 +93,7 @@ export default function Dashboard() {
                     title={stat.title}
                     value={stat.value}
                     prefix={stat.icon}
-                    valueStyle={{ color: '#1677ff' }}
+                    valueStyle={{ color: '#3B4D8A' }}
                   />
                 </Card>
               </Col>
@@ -168,72 +136,6 @@ export default function Dashboard() {
             ))}
           </Row>
         </Card>
-
-        {/* Quick Actions */}
-        <Card title="Quick Actions" className="shadow-sm">
-          <Row gutter={[16, 16]}>
-            {quickActions.map((action) => (
-              <Col xs={24} sm={12} key={action.key}>
-                <Card 
-                  className="bg-gray-50 border-0 hover:bg-gray-100 transition-colors cursor-pointer"
-                  onClick={() => handleVisualizationClick(action.key)}
-                >
-                  <div className="flex items-center">
-                    <div className="text-2xl text-gray-500 mr-4">
-                      {action.icon}
-                    </div>
-                    <div>
-                      <Text strong className="text-lg">{action.title}</Text>
-                      <div className="text-gray-600">{action.description}</div>
-                    </div>
-                  </div>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-        </Card>
-
-        {/* Current Selection Summary */}
-        {(selectedInputs.length > 0 || selectedOutputs.length > 0) && (
-          <Card title="Current Selection" className="shadow-sm border-blue-200">
-            <Row gutter={[16, 8]}>
-              {selectedInputs.length > 0 && (
-                <Col xs={24} lg={12}>
-                  <div>
-                    <Text strong className="text-blue-600">Selected Inputs ({selectedInputs.length}):</Text>
-                    <div className="mt-2">
-                      {selectedInputs.map(input => (
-                        <span 
-                          key={input} 
-                          className="inline-block bg-blue-100 text-blue-800 px-2 py-1 rounded text-sm mr-2 mb-1"
-                        >
-                          {input}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Col>
-              )}
-              {selectedOutputs.length > 0 && (
-                <Col xs={24} lg={12}>
-                  <div>
-                    <Text strong className="text-green-600">Selected Outputs ({selectedOutputs.length}):</Text>
-                    <div className="mt-2">
-                      {selectedOutputs.map(output => (
-                        <span 
-                          key={output} 
-                          className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded text-sm mr-2 mb-1"
-                        >
-                          {output}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </Col>
-              )}
-            </Row>
-          </Card>
-        )}
 
         {/* Footer Info */}
         <div className="text-center py-4">

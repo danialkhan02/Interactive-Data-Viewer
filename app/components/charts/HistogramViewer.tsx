@@ -12,9 +12,10 @@ import {
   ChartOptions,
 } from 'chart.js';
 import { Card, Typography, Select, Space, Divider, Row, Col, Alert } from 'antd';
-import { useState } from 'react';
 import { loadDataset, getInputProperties, getOutputProperties, getPropertyRange } from '../../services/dataParser';
 import RangeSlider from '../ui/RangeSlider';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
+import { setHistogramOutput, setHistogramRange } from '../../store/datasetStore';
 
 const { Title: AntTitle, Text } = Typography;
 const { Option } = Select;
@@ -37,12 +38,12 @@ interface HistogramViewerProps {
 }
 
 export default function HistogramViewer({
-  bins = 20,
   height = 400,
   className,
 }: HistogramViewerProps) {
-  const [selectedOutput, setSelectedOutput] = useState<string>('');
-  const [outputRange, setOutputRange] = useState<[number, number] | null>(null);
+  const dispatch = useAppDispatch();
+  const selectedOutput = useAppSelector(state => state.dataset.histogram.selectedOutput);
+  const outputRange = useAppSelector(state => state.dataset.histogram.outputRange);
 
   // Get available properties
   const inputProperties = getInputProperties();
@@ -75,11 +76,11 @@ export default function HistogramViewer({
     if (!range) return [];
 
     const { min, max } = range;
-    const binWidth = (max - min) / bins;
+    const binWidth = (max - min) / 20;
     
     // Initialize bins
     const histogramBins: HistogramData[] = [];
-    for (let i = 0; i < bins; i++) {
+    for (let i = 0; i < 20; i++) {
       const binMin = min + i * binWidth;
       const binMax = min + (i + 1) * binWidth;
       histogramBins.push({
@@ -93,8 +94,8 @@ export default function HistogramViewer({
     // Count filtered input values in each bin
     filteredInputValues.forEach(value => {
       let binIndex = Math.floor((value - min) / binWidth);
-      if (binIndex >= bins) binIndex = bins - 1;
-      if (binIndex >= 0 && binIndex < bins) {
+      if (binIndex >= 20) binIndex = 19;
+      if (binIndex >= 0 && binIndex < 20) {
         histogramBins[binIndex].count++;
       }
     });
@@ -121,13 +122,13 @@ export default function HistogramViewer({
 
   // Handle output selection change
   const handleOutputChange = (value: string) => {
-    setSelectedOutput(value);
-    setOutputRange(null); // Reset range when output changes
+    dispatch(setHistogramOutput(value));
+    dispatch(setHistogramRange(null)); // Reset range when output changes
   };
 
   // Handle range change
   const handleRangeChange = (range: [number, number]) => {
-    setOutputRange(range);
+    dispatch(setHistogramRange(range));
   };
 
   const filteredCount = getFilteredExperimentCount();

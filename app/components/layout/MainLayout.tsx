@@ -1,37 +1,22 @@
 'use client';
 
 import { Layout } from 'antd';
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 const { Content } = Layout;
 
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
+
 interface MainLayoutProps {
   children: ReactNode;
+  currentView?: ViewType;
+  onViewChange?: (view: ViewType) => void;
 }
 
-export default function MainLayout({ children }: MainLayoutProps) {
+export default function MainLayout({ children, currentView = 'dashboard', onViewChange }: MainLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Handle responsive behavior
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-      if (mobile) {
-        setSidebarCollapsed(true);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Calculate content margin based on sidebar state
-  const contentMarginLeft = '0px';
 
   return (
     <Layout className="min-h-screen bg-gray-50">
@@ -45,14 +30,16 @@ export default function MainLayout({ children }: MainLayoutProps) {
           className="fixed left-0 top-0 bottom-0 z-40"
           onCollapse={setSidebarCollapsed}
           collapsed={sidebarCollapsed}
+          currentView={currentView}
+          onViewChange={onViewChange}
         />
         
         {/* Content Area */}
         <Content 
           className="min-h-screen bg-white transition-all duration-300"
           style={{
-            marginLeft: isMobile ? '0' : contentMarginLeft,
-            padding: isMobile ? '16px' : '16px 16px 16px 8px',
+            marginLeft: '0px',
+            padding: '16px 16px 16px 8px',
             minHeight: 'calc(100vh - 64px)', // Full height minus header
           }}
         >

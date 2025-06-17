@@ -10,26 +10,29 @@ import {
   HomeOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
 const { Text } = Typography;
+
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
 
 interface SidebarProps {
   className?: string;
   onCollapse?: (collapsed: boolean) => void;
   collapsed?: boolean;
+  currentView?: ViewType;
+  onViewChange?: (view: ViewType) => void;
 }
 
 export default function Sidebar({ 
   className, 
   onCollapse, 
-  collapsed: controlledCollapsed 
+  collapsed: controlledCollapsed,
+  currentView = 'dashboard',
+  onViewChange
 }: SidebarProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const collapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
-  const navigate = useNavigate();
-  const location = useLocation();
   
   const handleCollapse = (newCollapsed: boolean) => {
     if (controlledCollapsed === undefined) {
@@ -65,38 +68,13 @@ export default function Sidebar({
   ];
 
   const handleMenuClick = (e: { key: string }) => {
-    switch (e.key) {
-      case 'dashboard':
-        navigate('/');
-        break;
-      case 'scatterplot':
-        navigate('/scatterplot');
-        break;
-      case 'histogram':
-        navigate('/histogram');
-        break;
-      case 'filters':
-        navigate('/filters');
-        break;
-      default:
-        console.log('Navigation not implemented for:', e.key);
-    }
+    const view = e.key as ViewType;
+    onViewChange?.(view);
   };
 
-  // Get current selected menu key based on location
+  // Get current selected menu key based on current view
   const getCurrentMenuKey = () => {
-    switch (location.pathname) {
-      case '/':
-        return ['dashboard'];
-      case '/scatterplot':
-        return ['scatterplot'];
-      case '/histogram':
-        return ['histogram'];
-      case '/filters':
-        return ['filters'];
-      default:
-        return ['dashboard'];
-    }
+    return [currentView];
   };
 
   const toggleCollapsed = () => {
@@ -110,21 +88,17 @@ export default function Sidebar({
       onCollapse={handleCollapse}
       width={256}
       className={`${className} bg-white`}
-      style={{ backgroundColor: '#ffffff', border: 'none' }}
+      style={{ backgroundColor: '#FAFAFA', border: 'none' }}
       trigger={null}
-      breakpoint="lg"
       collapsedWidth={80}
     >
-      <div className="h-full flex flex-col pt-16">
+      <div className="h-full flex flex-col">
         {/* Sidebar Header */}
-        <div className="px-4 py-2 border-b border-gray-200">
+        <div className="py-2 border-b border-gray-200">
           <div className="flex items-center justify-between">
             {!collapsed && (
               <div className="flex items-center">
-                <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center mr-2">
-                  <BarChartOutlined className="text-white text-sm" />
-                </div>
-                <Text strong className="text-gray-800">
+                <Text strong className="ml-2 text-gray-800">
                   Navigation
                 </Text>
               </div>
@@ -148,7 +122,7 @@ export default function Sidebar({
             onClick={handleMenuClick}
             className="border-none h-full"
             inlineCollapsed={collapsed}
-            style={{ borderRight: 0, paddingTop: 0 }}
+            style={{ backgroundColor: '#FAFAFA', borderRight: 0, paddingTop: 0 }}
           />
         </div>
 

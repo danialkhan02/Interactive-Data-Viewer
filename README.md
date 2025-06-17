@@ -8,9 +8,6 @@ This is an interactive data visualization tool built to explore a dataset of pol
 
 - **Scatterplot Viewer** - X/Y property correlations with interactive selection
 - **Histogram Viewer** - Range-based filtering and distribution analysis  
-- **Correlation Matrix** - Heatmap visualization of input/output relationships
-- **Similarity Search** - Find experiments with similar input compositions
-- **Time Trends** - Temporal analysis of experimental outcomes
 - **Advanced Filtering** - Query and filter experiments by properties
 
 ## 🛠 Tech Stack

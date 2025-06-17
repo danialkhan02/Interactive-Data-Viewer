@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { Card, Typography, Button, Space } from 'antd';
-import { ZoomInOutlined, UndoOutlined } from '@ant-design/icons';
+import { ZoomInOutlined, ZoomOutOutlined, UndoOutlined } from '@ant-design/icons';
 import { ChartDataPoint } from '../../types';
 import { loadDataset } from '../../services/dataParser';
 import { useAppSelector } from '../../store/hooks';
@@ -152,7 +152,7 @@ export default function ScatterPlot({
         },
         zoom: {
           wheel: {
-            enabled: true,
+            enabled: false,
           },
           pinch: {
             enabled: true,
@@ -249,7 +249,7 @@ export default function ScatterPlot({
             title="Zoom In"
           />
           <Button 
-            icon={<ZoomInOutlined style={{ transform: 'scaleY(-1)' }} />} 
+            icon={<ZoomOutOutlined />} 
             onClick={zoomOut}
             size="small"
             title="Zoom Out"
@@ -271,7 +271,7 @@ export default function ScatterPlot({
       
       <div className="mt-2 text-center">
         <Text type="secondary" className="text-xs">
-          Tip: Hover over points for details • Use controls above or mouse interactions for zoom/pan
+          Tip: Hover over points for details • Use controls above for zoom/pan
         </Text>
       </div>
     </Card>

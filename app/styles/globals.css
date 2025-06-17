@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Custom Uncountable brand color overrides */
+.bg-blue-50 {
+  background-color: #f0f2ff !important;
+}
+
+.bg-blue-100 {
+  background-color: #e0e7ff !important;
+}
+
+.text-blue-500 {
+  color: #3B4D8A !important;
+}
+
+.text-blue-600 {
+  color: #3B4D8A !important;
+}
+
+.text-blue-800 {
+  color: #2d3766 !important;
+}
+
+.border-blue-200 {
+  border-color: #c7d2fe !important;
+}
+
+.border-blue-300 {
+  border-color: #a5b4fc !important;
+}
+
+/* Sidebar menu item selected styling */
+.ant-menu-item-selected,
+.ant-menu-submenu-title-selected {
+  background-color: #E3E8FF !important;
+}
+
+.ant-menu-item-selected .ant-menu-title-content,
+.ant-menu-submenu-title-selected .ant-menu-title-content {
+  color: inherit;
+}
+
+.ant-menu-inline .ant-menu-item-selected {
+  background-color: #E3E8FF !important;
+}
