@@ -2,7 +2,7 @@
 
 import { Space, Typography, Drawer, Button, Badge } from 'antd';
 import { useState } from 'react';
-import { FilterOutlined, CloseOutlined } from '@ant-design/icons';
+import { FilterOutlined } from '@ant-design/icons';
 import FilterPanel from '../components/ui/FilterPanel';
 import FilteredResultsTable from '../components/ui/FilteredResultsTable';
 import { ExperimentData } from '../types';
