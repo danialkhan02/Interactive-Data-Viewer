@@ -1,9 +1,8 @@
 'use client';
 
-import { Layout, Typography } from 'antd';
+import { Layout } from 'antd';
 
 const { Header: AntHeader } = Layout;
-const { Title } = Typography;
 
 interface HeaderProps {
   className?: string;
@@ -17,15 +16,8 @@ export default function Header({ className }: HeaderProps) {
     >
       <div className="flex items-center h-full w-full px-6 relative">
         {/* Logo - Left side */}
-        <div className="flex items-center">
-          <img src="/assets/logo.png" alt="Uncountable Logo" className="w-50 h-10" />
-        </div>
-        
-        {/* Title - Centered */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <Title level={3} className="m-0 text-gray-800">
-            Interactive Data Viewer
-          </Title>
+          <img src="/assets/logo.png" alt="Uncountable Logo" className="w-50 h-10" />
         </div>
       </div>
     </AntHeader>

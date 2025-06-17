@@ -68,7 +68,7 @@ export default function Dashboard() {
       title: 'Scatterplot Analysis',
       description: 'Explore relationships between variables with interactive scatter plots',
       icon: <DotChartOutlined className="text-2xl text-blue-500" />,
-      color: 'border-blue-200 bg-blue-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
     },
     {
@@ -76,7 +76,7 @@ export default function Dashboard() {
       title: 'Distribution Analysis',
       description: 'Visualize data distributions and frequency patterns',
       icon: <BarChartOutlined className="text-2xl text-green-500" />,
-      color: 'border-green-200 bg-green-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
     },
     {
@@ -84,7 +84,7 @@ export default function Dashboard() {
       title: 'Data Filtering',
       description: 'Filter experiments by input properties and explore detailed results',
       icon: <FilterOutlined className="text-2xl text-purple-500" />,
-      color: 'border-purple-200 bg-purple-50',
+      color: 'border-gray-200',
       buttonColor: 'primary',
     },
   ];
@@ -125,7 +125,7 @@ export default function Dashboard() {
                     title={stat.title}
                     value={stat.value}
                     prefix={stat.icon}
-                    valueStyle={{ color: '#1677ff' }}
+                    valueStyle={{ color: '#3B4D8A' }}
                   />
                 </Card>
               </Col>

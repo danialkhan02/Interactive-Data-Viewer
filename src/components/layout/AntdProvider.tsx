@@ -12,7 +12,7 @@ export default function AntdProvider({ children }: AntdProviderProps) {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#1890ff',
+          colorPrimary: '#3B4D8A',
           borderRadius: 6,
         },
       }}
