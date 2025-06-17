@@ -1,8 +1,8 @@
 'use client';
 
-import { Table, Typography, Space, Tag, Tooltip, Card, Statistic, Row, Col } from 'antd';
-import { useState, useEffect, useMemo } from 'react';
-import { ExperimentOutlined, FilterOutlined } from '@ant-design/icons';
+import { Table, Typography, Space, Tag, Tooltip, Card, Statistic, Row, Col, Button } from 'antd';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { ExperimentOutlined, FilterOutlined, ArrowRightOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { Dataset, ExperimentData } from '../../types';
 import { filterExperiments, getInputProperties, getOutputProperties } from '../../services/dataParser';
 import type { ColumnsType } from 'antd/es/table';
@@ -38,6 +38,7 @@ export default function FilteredResultsTable({
   const [loading, setLoading] = useState(false);
   const [filteredDataset, setFilteredDataset] = useState<Dataset>({});
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
+  const tableRef = useRef<any>(null);
 
   // Get property lists for columns
   const inputProperties = getInputProperties();
@@ -112,6 +113,50 @@ export default function FilteredResultsTable({
     return paddedData;
   }, [filteredDataset, inputProperties, outputProperties, pageSize]);
 
+  // Render functions to prevent recreation on every render
+  const renderExperimentId = useCallback((id: string, record: TableDataRow) => {
+    if (record.isEmpty) {
+      return <div style={{ height: '24px' }} />;
+    }
+    return (
+      <Space>
+        <ExperimentOutlined className="text-blue-500" />
+        <Text strong className="font-mono text-sm">
+          {id}
+        </Text>
+      </Space>
+    );
+  }, []);
+
+  const renderInputValue = useCallback((value: number, record: TableDataRow) => {
+    if (record.isEmpty) {
+      return <div style={{ height: '20px' }} />;
+    }
+    return (
+      <Text className="font-mono text-xs">
+        {value?.toFixed(2) ?? 'N/A'}
+      </Text>
+    );
+  }, []);
+
+  const renderOutputValue = useCallback((value: number, record: TableDataRow) => {
+    if (record.isEmpty) {
+      return <div style={{ height: '20px' }} />;
+    }
+    return (
+      <Tag color="green" className="font-mono text-xs">
+        {value?.toFixed(2) ?? 'N/A'}
+      </Tag>
+    );
+  }, []);
+
+  const sorterFunction = useCallback((a: TableDataRow, b: TableDataRow) => {
+    if (a.isEmpty && b.isEmpty) return 0;
+    if (a.isEmpty) return 1;
+    if (b.isEmpty) return -1;
+    return a.experimentId.localeCompare(b.experimentId);
+  }, []);
+
   // Create table columns
   const columns: ColumnsType<TableDataRow> = useMemo(() => {
     const cols: ColumnsType<TableDataRow> = [
@@ -121,25 +166,8 @@ export default function FilteredResultsTable({
         key: 'experimentId',
         fixed: 'left',
         width: 160,
-        render: (id: string, record: TableDataRow) => {
-          if (record.isEmpty) {
-            return <div style={{ height: '24px' }} />; // Empty row placeholder
-          }
-          return (
-            <Space>
-              <ExperimentOutlined className="text-blue-500" />
-              <Text strong className="font-mono text-sm">
-                {id}
-              </Text>
-            </Space>
-          );
-        },
-        sorter: (a, b) => {
-          if (a.isEmpty && b.isEmpty) return 0;
-          if (a.isEmpty) return 1;
-          if (b.isEmpty) return -1;
-          return a.experimentId.localeCompare(b.experimentId);
-        },
+        render: renderExperimentId,
+        sorter: sorterFunction,
       },
     ];
 
@@ -157,16 +185,7 @@ export default function FilteredResultsTable({
           key: `input_${prop}`,
           width: 100,
           align: 'center' as const,
-          render: (value: number, record: TableDataRow) => {
-            if (record.isEmpty) {
-              return <div style={{ height: '20px' }} />;
-            }
-            return (
-              <Text className="font-mono text-xs">
-                {value?.toFixed(2) ?? 'N/A'}
-              </Text>
-            );
-          },
+          render: renderInputValue,
           sorter: (a, b) => {
             if (a.isEmpty && b.isEmpty) return 0;
             if (a.isEmpty) return 1;
@@ -193,16 +212,7 @@ export default function FilteredResultsTable({
           key: `output_${prop}`,
           width: 100,
           align: 'center' as const,
-          render: (value: number, record: TableDataRow) => {
-            if (record.isEmpty) {
-              return <div style={{ height: '20px' }} />;
-            }
-            return (
-              <Tag color="green" className="font-mono text-xs">
-                {value?.toFixed(2) ?? 'N/A'}
-              </Tag>
-            );
-          },
+          render: renderOutputValue,
           sorter: (a, b) => {
             if (a.isEmpty && b.isEmpty) return 0;
             if (a.isEmpty) return 1;
@@ -216,7 +226,7 @@ export default function FilteredResultsTable({
     }
 
     return cols;
-  }, [inputProperties, outputProperties]);
+  }, [inputProperties, outputProperties, renderExperimentId, renderInputValue, renderOutputValue, sorterFunction]);
 
   // Expanded row render function
   const expandedRowRender = (record: TableDataRow) => {
@@ -266,6 +276,23 @@ export default function FilteredResultsTable({
   const activeFilterCount = Object.keys(filters).length;
   const totalExperiments = Object.keys(filteredDataset).length;
 
+  // Scroll navigation functions
+  const scrollToInputs = () => {
+    const tableElement = tableRef.current?.querySelector('.ant-table-body');
+    if (tableElement) {
+      tableElement.scrollTo({ left: 0, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToOutputs = () => {
+    const tableElement = tableRef.current?.querySelector('.ant-table-body');
+    if (tableElement) {
+      // Calculate scroll position: Experiment ID column (160px) + all input columns (100px each)
+      const scrollLeft = 160 + (inputProperties.length * 100);
+      tableElement.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    }
+  };
+
   return (
     <Card className={className}>
       <Space direction="vertical" className="w-full" size="large">
@@ -279,6 +306,32 @@ export default function FilteredResultsTable({
             </Text>
           </div>
 
+          {/* Navigation Buttons */}
+          {totalExperiments > 0 && (inputProperties.length > 0 || outputProperties.length > 0) && (
+            <Space>
+              {inputProperties.length > 0 && (
+                <Button
+                  size="small"
+                  icon={<ArrowLeftOutlined />}
+                  onClick={scrollToInputs}
+                  title="Scroll to Input Properties"
+                >
+                  Inputs
+                </Button>
+              )}
+              {outputProperties.length > 0 && (
+                <Button
+                  size="small"
+                  icon={<ArrowRightOutlined />}
+                  onClick={scrollToOutputs}
+                  title="Scroll to Output Properties"
+                  type="primary"
+                >
+                  Outputs
+                </Button>
+              )}
+            </Space>
+          )}
         </div>
 
         {/* Summary Statistics */}
@@ -314,39 +367,41 @@ export default function FilteredResultsTable({
         )}
 
         {/* Results Table */}
-        <Table<TableDataRow>
-          dataSource={tableData}
-          columns={columns}
-          loading={loading}
-          scroll={{ 
-            x: Math.max(800, (inputProperties.length + outputProperties.length) * 100 + 260),
-            y: maxHeight 
-          }}
-          size="small"
-          pagination={{
-            pageSize,
-            showSizeChanger: false,
-            showQuickJumper: true,
-            showTotal: (total, range) => {
-              const actualTotal = Object.keys(filteredDataset).length;
-              return `${range[0]}-${Math.min(range[1], actualTotal)} of ${actualTotal} experiments`;
-            },
-          }}
-          expandable={{
-            expandedRowRender,
-            onExpand: handleExpand,
-            expandedRowKeys,
-            expandRowByClick: false,
-            rowExpandable: (record) => !record.isEmpty,
-          }}
-          rowClassName={(record, idx) => {
-            if (record.isEmpty) {
-              return 'opacity-0 pointer-events-none';
-            }
-            return idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-          }}
-          bordered
-        />
+        <div ref={tableRef}>
+          <Table<TableDataRow>
+            dataSource={tableData}
+            columns={columns}
+            loading={loading}
+            scroll={{ 
+              x: Math.max(800, (inputProperties.length + outputProperties.length) * 100 + 260),
+              y: maxHeight 
+            }}
+            size="small"
+            pagination={{
+              pageSize,
+              showSizeChanger: false,
+              showQuickJumper: true,
+              showTotal: (total, range) => {
+                const actualTotal = Object.keys(filteredDataset).length;
+                return `${range[0]}-${Math.min(range[1], actualTotal)} of ${actualTotal} experiments`;
+              },
+            }}
+            expandable={{
+              expandedRowRender,
+              onExpand: handleExpand,
+              expandedRowKeys,
+              expandRowByClick: false,
+              rowExpandable: (record) => !record.isEmpty,
+            }}
+            rowClassName={(record, idx) => {
+              if (record.isEmpty) {
+                return 'opacity-0 pointer-events-none';
+              }
+              return idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+            }}
+            bordered
+          />
+        </div>
 
         {/* Empty State */}
         {!loading && totalExperiments === 0 && (
@@ -363,7 +418,7 @@ export default function FilteredResultsTable({
         {totalExperiments > 0 && (
           <div className="bg-blue-50 p-3 rounded text-center">
             <Text type="secondary" className="text-xs">
-              💡 Click on experiment rows to expand detailed view • Use column headers to sort data
+              💡 Click on experiment rows to expand detailed view • Use column headers to sort data • Use navigation buttons above to jump between sections
             </Text>
           </div>
         )}
