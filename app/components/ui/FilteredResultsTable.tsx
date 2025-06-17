@@ -61,9 +61,9 @@ export default function FilteredResultsTable({
     applyFilters();
   }, [filters]);
 
-  // Prepare table data with consistent page sizing
+  // Prepare table data
   const tableData: TableDataRow[] = useMemo(() => {
-    const actualData = Object.entries(filteredDataset).map(([experimentId, data]) => {
+    return Object.entries(filteredDataset).map(([experimentId, data]) => {
       const row: TableDataRow = {
         key: experimentId,
         experimentId,
@@ -82,42 +82,10 @@ export default function FilteredResultsTable({
 
       return row;
     });
-
-    // Calculate total pages needed
-    const totalPages = Math.max(1, Math.ceil(actualData.length / pageSize));
-    const totalRowsNeeded = totalPages * pageSize;
-    
-    // Pad with empty rows to maintain consistent page size
-    const paddedData = [...actualData];
-    for (let i = actualData.length; i < totalRowsNeeded; i++) {
-      const emptyRow: TableDataRow = {
-        key: `empty_${i}`,
-        experimentId: '',
-        data: { inputs: {}, outputs: {} } as ExperimentData,
-        isEmpty: true,
-      };
-
-      // Add empty values for input columns
-      inputProperties.forEach(prop => {
-        emptyRow[`input_${prop}`] = undefined;
-      });
-
-      // Add empty values for output columns
-      outputProperties.forEach(prop => {
-        emptyRow[`output_${prop}`] = undefined;
-      });
-
-      paddedData.push(emptyRow);
-    }
-
-    return paddedData;
-  }, [filteredDataset, inputProperties, outputProperties, pageSize]);
+  }, [filteredDataset, inputProperties, outputProperties]);
 
   // Render functions to prevent recreation on every render
-  const renderExperimentId = useCallback((id: string, record: TableDataRow) => {
-    if (record.isEmpty) {
-      return <div style={{ height: '24px' }} />;
-    }
+  const renderExperimentId = useCallback((id: string) => {
     return (
       <Space>
         <ExperimentOutlined className="text-blue-500" />
@@ -128,10 +96,7 @@ export default function FilteredResultsTable({
     );
   }, []);
 
-  const renderInputValue = useCallback((value: number, record: TableDataRow) => {
-    if (record.isEmpty) {
-      return <div style={{ height: '20px' }} />;
-    }
+  const renderInputValue = useCallback((value: number) => {
     return (
       <Text className="font-mono text-xs">
         {value?.toFixed(2) ?? 'N/A'}
@@ -139,10 +104,7 @@ export default function FilteredResultsTable({
     );
   }, []);
 
-  const renderOutputValue = useCallback((value: number, record: TableDataRow) => {
-    if (record.isEmpty) {
-      return <div style={{ height: '20px' }} />;
-    }
+  const renderOutputValue = useCallback((value: number) => {
     return (
       <Tag color="green" className="font-mono text-xs">
         {value?.toFixed(2) ?? 'N/A'}
@@ -151,9 +113,6 @@ export default function FilteredResultsTable({
   }, []);
 
   const sorterFunction = useCallback((a: TableDataRow, b: TableDataRow) => {
-    if (a.isEmpty && b.isEmpty) return 0;
-    if (a.isEmpty) return 1;
-    if (b.isEmpty) return -1;
     return a.experimentId.localeCompare(b.experimentId);
   }, []);
 
@@ -165,7 +124,7 @@ export default function FilteredResultsTable({
         dataIndex: 'experimentId',
         key: 'experimentId',
         fixed: 'left',
-        width: 160,
+        width: 165,
         render: renderExperimentId,
         sorter: sorterFunction,
       },
@@ -187,9 +146,6 @@ export default function FilteredResultsTable({
           align: 'center' as const,
           render: renderInputValue,
           sorter: (a, b) => {
-            if (a.isEmpty && b.isEmpty) return 0;
-            if (a.isEmpty) return 1;
-            if (b.isEmpty) return -1;
             const aVal = a[`input_${prop}`] as number ?? 0;
             const bVal = b[`input_${prop}`] as number ?? 0;
             return aVal - bVal;
@@ -214,9 +170,6 @@ export default function FilteredResultsTable({
           align: 'center' as const,
           render: renderOutputValue,
           sorter: (a, b) => {
-            if (a.isEmpty && b.isEmpty) return 0;
-            if (a.isEmpty) return 1;
-            if (b.isEmpty) return -1;
             const aVal = a[`output_${prop}`] as number ?? 0;
             const bVal = b[`output_${prop}`] as number ?? 0;
             return aVal - bVal;
@@ -382,8 +335,7 @@ export default function FilteredResultsTable({
               showSizeChanger: false,
               showQuickJumper: true,
               showTotal: (total, range) => {
-                const actualTotal = Object.keys(filteredDataset).length;
-                return `${range[0]}-${Math.min(range[1], actualTotal)} of ${actualTotal} experiments`;
+                return `${range[0]}-${range[1]} of ${total} experiments`;
               },
             }}
             expandable={{
@@ -391,12 +343,8 @@ export default function FilteredResultsTable({
               onExpand: handleExpand,
               expandedRowKeys,
               expandRowByClick: false,
-              rowExpandable: (record) => !record.isEmpty,
             }}
             rowClassName={(record, idx) => {
-              if (record.isEmpty) {
-                return 'opacity-0 pointer-events-none';
-              }
               return idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
             }}
             bordered
