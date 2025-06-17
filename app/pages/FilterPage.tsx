@@ -66,7 +66,7 @@ export default function FilterPage() {
           onExperimentSelect={handleExperimentSelect}
           title=""
           showSummary={false}
-          maxHeight={window.innerHeight - 200}
+          maxHeight={600}
           pageSize={8}
           className="w-full"
         />

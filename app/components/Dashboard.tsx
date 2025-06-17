@@ -11,12 +11,15 @@ import {
 } from '@ant-design/icons';
 import { useAppSelector } from '../store/hooks';
 import { getDatasetSummary } from '../services/dataParser';
-import { useNavigate } from 'react-router-dom';
-
 const { Title, Paragraph, Text } = Typography;
 
-export default function Dashboard() {
-  const navigate = useNavigate();
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
+
+interface DashboardProps {
+  onViewChange?: (view: ViewType) => void;
+}
+
+export default function Dashboard({ onViewChange }: DashboardProps) {
   const { selectedInputs, selectedOutputs } = useAppSelector(state => state.dataset);
   
   // Load dataset summary for overview stats
@@ -24,19 +27,8 @@ export default function Dashboard() {
 
   // Handle navigation to visualization pages
   const handleVisualizationClick = (key: string) => {
-    switch (key) {
-      case 'scatterplot':
-        navigate('/scatterplot');
-        break;
-      case 'histogram':
-        navigate('/histogram');
-        break;
-      case 'filters':
-        navigate('/filters');
-        break;
-      default:
-        console.log('Navigation not implemented for:', key);
-    }
+    const view = key as ViewType;
+    onViewChange?.(view);
   };
 
   const overviewStats = [

@@ -7,11 +7,15 @@ import Sidebar from './Sidebar';
 
 const { Content } = Layout;
 
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
+
 interface MainLayoutProps {
   children: ReactNode;
+  currentView?: ViewType;
+  onViewChange?: (view: ViewType) => void;
 }
 
-export default function MainLayout({ children }: MainLayoutProps) {
+export default function MainLayout({ children, currentView = 'dashboard', onViewChange }: MainLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -26,6 +30,8 @@ export default function MainLayout({ children }: MainLayoutProps) {
           className="fixed left-0 top-0 bottom-0 z-40"
           onCollapse={setSidebarCollapsed}
           collapsed={sidebarCollapsed}
+          currentView={currentView}
+          onViewChange={onViewChange}
         />
         
         {/* Content Area */}

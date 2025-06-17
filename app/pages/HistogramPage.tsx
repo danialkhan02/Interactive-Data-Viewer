@@ -1,7 +1,12 @@
 'use client';
 
 import { Space, Typography } from 'antd';
-import HistogramViewer from '../components/charts/HistogramViewer';
+import dynamic from 'next/dynamic';
+
+const HistogramViewer = dynamic(() => import('../components/charts/HistogramViewer'), {
+  ssr: false,
+  loading: () => <div className="flex justify-center items-center h-96">Loading chart...</div>
+});
 
 const { Title, Paragraph } = Typography;
 

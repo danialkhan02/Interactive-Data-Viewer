@@ -10,26 +10,29 @@ import {
   HomeOutlined
 } from '@ant-design/icons';
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 const { Sider } = Layout;
 const { Text } = Typography;
+
+type ViewType = 'dashboard' | 'scatterplot' | 'histogram' | 'filters';
 
 interface SidebarProps {
   className?: string;
   onCollapse?: (collapsed: boolean) => void;
   collapsed?: boolean;
+  currentView?: ViewType;
+  onViewChange?: (view: ViewType) => void;
 }
 
 export default function Sidebar({ 
   className, 
   onCollapse, 
-  collapsed: controlledCollapsed 
+  collapsed: controlledCollapsed,
+  currentView = 'dashboard',
+  onViewChange
 }: SidebarProps) {
   const [internalCollapsed, setInternalCollapsed] = useState(false);
   const collapsed = controlledCollapsed !== undefined ? controlledCollapsed : internalCollapsed;
-  const navigate = useNavigate();
-  const location = useLocation();
   
   const handleCollapse = (newCollapsed: boolean) => {
     if (controlledCollapsed === undefined) {
@@ -65,38 +68,13 @@ export default function Sidebar({
   ];
 
   const handleMenuClick = (e: { key: string }) => {
-    switch (e.key) {
-      case 'dashboard':
-        navigate('/');
-        break;
-      case 'scatterplot':
-        navigate('/scatterplot');
-        break;
-      case 'histogram':
-        navigate('/histogram');
-        break;
-      case 'filters':
-        navigate('/filters');
-        break;
-      default:
-        console.log('Navigation not implemented for:', e.key);
-    }
+    const view = e.key as ViewType;
+    onViewChange?.(view);
   };
 
-  // Get current selected menu key based on location
+  // Get current selected menu key based on current view
   const getCurrentMenuKey = () => {
-    switch (location.pathname) {
-      case '/':
-        return ['dashboard'];
-      case '/scatterplot':
-        return ['scatterplot'];
-      case '/histogram':
-        return ['histogram'];
-      case '/filters':
-        return ['filters'];
-      default:
-        return ['dashboard'];
-    }
+    return [currentView];
   };
 
   const toggleCollapsed = () => {

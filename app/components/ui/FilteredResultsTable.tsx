@@ -38,7 +38,7 @@ export default function FilteredResultsTable({
   const [loading, setLoading] = useState(false);
   const [filteredDataset, setFilteredDataset] = useState<Dataset>({});
   const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
-  const tableRef = useRef<any>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   // Get property lists for columns
   const inputProperties = getInputProperties();
