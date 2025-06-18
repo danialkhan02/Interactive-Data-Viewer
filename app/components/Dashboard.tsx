@@ -85,7 +85,7 @@ export default function Dashboard({ onViewChange }: DashboardProps) {
 
         {/* Overview Statistics */}
         <Card title="Dataset Overview" className="shadow-sm">
-          <Row gutter={[16, 16]}>
+          <Row gutter={[16, 16]} justify="center">
             {overviewStats.map((stat, index) => (
               <Col xs={24} sm={12} lg={6} key={index}>
                 <Card className="text-center border-0 bg-gray-50">
@@ -103,7 +103,7 @@ export default function Dashboard({ onViewChange }: DashboardProps) {
 
         {/* Visualization Sections */}
         <Card title="Visualization Tools" className="shadow-sm">
-          <Row gutter={[16, 16]}>
+          <Row gutter={[16, 16]} justify="center">
             {visualizationSections.map((section) => (
               <Col xs={24} lg={12} key={section.key}>
                 <Card 
