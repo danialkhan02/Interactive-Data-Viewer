@@ -69,16 +69,3 @@ export interface ChartDataPoint {
   y: number;
   experimentId: string;
 }
-
-// Filter types
-export interface PropertyFilter {
-  property: string;
-  min: number;
-  max: number;
-}
-
-export interface FilteredResult {
-  experimentId: string;
-  data: ExperimentData;
-  matchScore?: number;
-}

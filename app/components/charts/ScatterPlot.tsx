@@ -140,7 +140,7 @@ export default function ScatterPlot({
             ];
           },
           afterBody: () => {
-            return ['', 'Click and drag to pan', 'Use mouse wheel to zoom'];
+            return [''];
           },
         },
       },
