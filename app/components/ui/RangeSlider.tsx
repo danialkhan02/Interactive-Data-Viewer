@@ -1,7 +1,7 @@
 'use client';
 
 import { Slider, Typography, Space, InputNumber, Row, Col } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getPropertyRange, getInputProperties, getOutputProperties } from '../../services/dataParser';
 
 const { Text } = Typography;
@@ -47,38 +47,41 @@ export default function RangeSlider({
         }
       }
     }
-  }, [property, isInput, isOutput, value, onChange]);
+  }, [property, isInput, isOutput, value]);
 
   // Use external value if provided, otherwise use internal value
   const currentValue = value || internalValue;
 
+  // Memoized tooltip formatter to prevent re-renders
+  const tooltipFormatter = useCallback((value?: number) => value?.toFixed(2), []);
+
   // Handle slider change
-  const handleSliderChange = (newValue: number | number[]) => {
+  const handleSliderChange = useCallback((newValue: number | number[]) => {
     const rangeValue: [number, number] = Array.isArray(newValue) 
       ? [newValue[0], newValue[1]] 
       : [newValue, newValue];
     setInternalValue(rangeValue);
     onChange?.(rangeValue);
-  };
+  }, [onChange]);
 
   // Handle input number changes
-  const handleMinChange = (newMin: number | null) => {
+  const handleMinChange = useCallback((newMin: number | null) => {
     if (newMin !== null && propertyRange) {
       const clampedMin = Math.max(propertyRange.min, Math.min(newMin, currentValue[1]));
       const newValue: [number, number] = [clampedMin, currentValue[1]];
       setInternalValue(newValue);
       onChange?.(newValue);
     }
-  };
+  }, [propertyRange, currentValue, onChange]);
 
-  const handleMaxChange = (newMax: number | null) => {
+  const handleMaxChange = useCallback((newMax: number | null) => {
     if (newMax !== null && propertyRange) {
       const clampedMax = Math.min(propertyRange.max, Math.max(newMax, currentValue[0]));
       const newValue: [number, number] = [currentValue[0], clampedMax];
       setInternalValue(newValue);
       onChange?.(newValue);
     }
-  };
+  }, [propertyRange, currentValue, onChange]);
 
   // Show loading state if property range is not available
   if (!property) {
@@ -136,7 +139,7 @@ export default function RangeSlider({
                 onChange={handleSliderChange}
                 disabled={disabled}
                 tooltip={{
-                  formatter: (value) => value?.toFixed(2),
+                  formatter: tooltipFormatter,
                 }}
               />
             </Col>
@@ -166,7 +169,7 @@ export default function RangeSlider({
             onChange={handleSliderChange}
             disabled={disabled}
             tooltip={{
-              formatter: (value) => value?.toFixed(2),
+              formatter: tooltipFormatter,
             }}
           />
         )}
